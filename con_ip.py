@@ -5,7 +5,7 @@ from sqlalchemy import create_engine, Column, Integer, String
 from sqlalchemy.orm import declarative_base, session, sessionmaker
 
 # mysql+mysqlconnector://户名: 密码@IP地址:端口号/数据库名称
-engine = create_engine("mysql+mysqlconnector://root:csap_h3c_yunzhi@192.168.2.8:3306/cybersasim_db")
+engine = create_engine("mysql+mysqlconnector://root:1234rewq!@192.168.1.8:3306/dev_us_auto")
 Base = declarative_base()
 
 
@@ -57,9 +57,12 @@ for row in result:
     if merge.get(row.name) is None:
         merge[row.name] = ip_str
     else:
-        new_ip_list = filter(lambda x: merge[row.name].find(x) == -1, ip_str.split(","))
-        if len(list(new_ip_list)) != 0:
-            merge[row.name] = merge[row.name] + "," + ",".join(new_ip_list)
+        if ip_str.find(",") == -1:
+            merge[row.name] = merge[row.name] + "," + ip_str
+        else:
+            new_ip_list = filter(lambda x: merge[row.name].find(x) == -1, ip_str.split(","))
+            if len(list(new_ip_list)) != 0:
+                merge[row.name] = merge[row.name] + "," + ",".join(list(new_ip_list))
 
 for k in merge:
     db_session.add(Information2(k, merge[k], county_dict[k]))
