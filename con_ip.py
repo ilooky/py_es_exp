@@ -57,8 +57,8 @@ for row in result:
     if merge.get(row.name) is None:
         merge[row.name] = ip_str
     else:
-        new_ip_list = ip_str.split(",").filter(lambda x: merge[row.name].find(x) == -1)
-        if len(new_ip_list) != 0:
+        new_ip_list = filter(lambda x: merge[row.name].find(x) == -1, ip_str.split(","))
+        if len(list(new_ip_list)) != 0:
             merge[row.name] = merge[row.name] + "," + ",".join(new_ip_list)
 
 for k in merge:
