@@ -60,11 +60,16 @@ for row in result:
         if ip_str.find(",") == -1 and merge[row.name].find(ip_str) == -1:
             merge[row.name] = merge[row.name] + "," + ip_str
         else:
+            # new_ip_list = filter(lambda x: merge[row.name].find(x) == -1, ip_str.split(","))
+            # if len(list(new_ip_list)) != 0:
+            #     merge[row.name] = merge[row.name] + "," + ",".join(list(new_ip_list))
             new_ip_list = filter(lambda x: merge[row.name].find(x) == -1, ip_str.split(","))
-            if len(list(new_ip_list)) != 0:
-                merge[row.name] = merge[row.name] + "," + ",".join(list(new_ip_list))
+            new_list = list(new_ip_list)
+            if len(new_list) != 0:
+                merge[row.name] = merge[row.name] + "," + (','.join(new_list))
 
+li = []
 for k in merge:
-    db_session.add(Information2(k, merge[k], county_dict[k]))
-db_session.flush()
+    li.append(Information2(k, merge[k], county_dict[k]))
+db_session.bulk_save_objects(li)
 db_session.commit()
